@@ -1,0 +1,16 @@
+target/
+*.class
+*.war
+.idea/
+.vscode/
+.settings/
+.classpath
+.project
+.DS_Store
+.env
+*.log
+# local databases may contain personal data
+*.db
+*.mv.db
+*.trace.db
+*.sql.gz

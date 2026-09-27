@@ -1,0 +1,23 @@
+name: CI
+on:
+  push:
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+      - name: Compile, run unit/integration tests (H2), package WAR
+        run: mvn -B verify
+      - name: Schema loads in MySQL 8
+        run: |
+          sudo systemctl start mysql
+          mysql -uroot -proot -e "CREATE DATABASE voting"
+          mysql -uroot -proot voting < src/main/resources/db/schema.sql
+          mysql -uroot -proot voting < src/main/resources/db/demo-data.sql
+          mysql -uroot -proot voting -e "SHOW TABLES"
